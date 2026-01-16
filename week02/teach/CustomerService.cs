@@ -11,24 +11,51 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Create a CustomerService with invalid size (0).
+        // Expected Result: Max Size should default to 10.
         Console.WriteLine("Test 1");
+        var cs1 = new CustomerService(0);
+        Console.WriteLine(cs1);
 
         // Defect(s) Found: 
-
+        Console.WriteLine("Invalid Size");
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
-        Console.WriteLine("Test 2");
+        // Scenario: Enqueue to full queue. Size = 1. Add 2 customers.
+        // Expected Result: First add succeeds. Second add displays error.
+        Console.WriteLine("Test 2: Queue Full");
+        var cs2 = new CustomerService(1);
+        Console.WriteLine("Adding Customer 1 (Should Succeed):");
+        cs2.AddNewCustomer();
+        Console.WriteLine("Adding Customer 2 (Should Fail):");
+        cs2.AddNewCustomer();
 
         // Defect(s) Found: 
 
         Console.WriteLine("=================");
 
         // Add more Test Cases As Needed Below
+
+        // Test 3
+        // Scenario: Serve customers in correct order and serve from empty queue.
+        // Expected Result: Serve Order: A, B. Error on 3rd serve.
+        Console.WriteLine("Test 3: Order & Empty Queue");
+        var cs3 = new CustomerService(2);
+        Console.WriteLine("Adding Customer A:");
+        cs3.AddNewCustomer(); // A
+        Console.WriteLine("Adding Customer B:");
+        cs3.AddNewCustomer(); // B
+        
+        Console.WriteLine("Serving Customer 1 (Expect A):");
+        cs3.ServeCustomer(); 
+        
+        Console.WriteLine("Serving Customer 2 (Expect B):");
+        cs3.ServeCustomer(); 
+        
+        Console.WriteLine("Serving Customer 3 (Expect Error):");
+        cs3.ServeCustomer(); 
+        Console.WriteLine("=================");
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +94,9 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) { 
+            // Fix: Changed > to >=
+            // Defect I: Full queue Check is Off-by-One
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,8 +117,15 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        // fix: Xheck if queue is empty first
+        if (_queue.Count <= 0) {
+            Console.WriteLine("The Queue is empty.");
+            return;
+        }
+
+        // Fix: Read customer before removing them
         var customer = _queue[0];
+        _queue.RemoveAt(0);
         Console.WriteLine(customer);
     }
 
