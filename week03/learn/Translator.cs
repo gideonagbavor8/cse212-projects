@@ -9,13 +9,14 @@ public class Translator
         Console.WriteLine(englishToGerman.Translate("Car")); // Auto
         Console.WriteLine(englishToGerman.Translate("Plane")); // Flugzeug
         Console.WriteLine(englishToGerman.Translate("Train")); // ???
+        Console.WriteLine(englishToGerman.Translate("house")); // ???
     }
 
     private Dictionary<string, string> _words = new();
 
     /// <summary>
     /// Add the translation from 'from_word' to 'to_word'
-    /// For example, in a english to german dictionary:
+    /// For example, in an english to german dictionary:
     /// 
     /// my_translator.AddWord("book","buch")
     /// </summary>
@@ -25,7 +26,13 @@ public class Translator
     public void AddWord(string fromWord, string toWord)
     {
         // ADD YOUR CODE HERE
+        _words[fromWord] = toWord;
+        // Alternatives versions
+        // _words.Add(fromWord, toWord);    // throws if key already exists
+        // _words.TryAdd(fromWord, toWord); // .NET 6+ returns boolean silent if exists)
     }
+
+
 
     /// <summary>
     /// Translates the from word into the word that this stores as the translation
@@ -35,6 +42,13 @@ public class Translator
     public string Translate(string fromWord)
     {
         // ADD YOUR CODE HERE
-        return "";
+        // Clean modern way:
+
+        // Using TryGetValue
+        if (_words.TryGetValue(fromWord, out string? translation))
+        {
+            return translation;
+        }
+        return "???";
     }
 }
