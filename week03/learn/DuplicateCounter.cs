@@ -20,11 +20,49 @@
 
         Console.WriteLine($"Number of items in the collection: {data.Length}");
         Console.WriteLine($"Number of duplicates : {CountDuplicates(data)}");
+        Console.WriteLine($"Number of duplicates (alternate): {CountDuplicatesAlternate(data)}");
+
     }
+
+
+    /// <summary>
+    /// Count duplicate occurrences using a HashSet to track numbers we've already seen.
+    /// Every time we encounter a number a second, third , fourth... time -> count it.
+    /// </summary>
 
     private static int CountDuplicates(int[] data)
     {
         // Add code here.
-        return 0;
+        // HashSet keeps only unique values - very fast Contains() and Add()
+        var seen = new HashSet<int>();
+
+        int duplicateCount = 0;
+
+        foreach (int number in data)
+        {
+            if (seen.Contains(number))
+            {
+                // we've seen this number before -> this is a duplicate occurrence
+                duplicateCount++;
+            }
+            else
+            {
+                // First time seeing this number -> remember it
+                seen.Add(number);
+            }
+        }
+
+        return duplicateCount;
+    }
+
+    /// <summary>
+    /// Alternative (often cleaner) approach
+    /// A HashSet automatically removes duplicates.
+    /// So: total elements - unique elements = number of duplicate occurrences
+    /// </summary>
+    private static int CountDuplicatesAlternate(int[] data)
+    {
+        var unique = new HashSet<int>(data);         // constructor copies only unique values
+        return data.Length - unique.Count;           // total - unique = duplicates
     }
 }
