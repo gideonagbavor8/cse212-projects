@@ -19,7 +19,7 @@ public class Basketball
     {
         var players = new Dictionary<string, int>();
 
-        using var reader = new TextFieldParser("basketball.csv");
+        using var reader = new TextFieldParser("week03/teach/basketball.csv");
         reader.TextFieldType = FieldType.Delimited;
         reader.SetDelimiters(",");
         reader.ReadFields(); // ignore header row
@@ -27,10 +27,29 @@ public class Basketball
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+
+            // Accumulate points for each player
+            if (players.ContainsKey(playerId))
+            {
+                players[playerId] += points;
+            } else
+            {
+                players[playerId] = points;
+            }
         }
 
-        Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        // Convert dictionary to array by points (descending)
+        var sortedPlayers = players.OrderByDescending(p => p.Value).ToArray();
 
-        var topPlayers = new string[10];
+        // Top 10 players
+        Console.WriteLine("Top 10 Players by career points:");
+        Console.WriteLine("-------------------------------");
+        for (int i = 0; i < Math.Min(10, sortedPlayers.Length); i++)
+        {
+            Console.WriteLine($"{sortedPlayers[i].Key}: {sortedPlayers[i].Value} points");
+        }
+        // Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+
+        // var topPlayers = new string[10];
     }
 }
